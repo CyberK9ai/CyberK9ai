@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberK9.ai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #050505;
+    --white: #f0ede8;
+    --k9-gold: #d4a017;
+    --k9-amber: #ff8c00;
+    --k9-red: #c0392b;
+    --k9-steel: #8a9bb0;
+    --k9-dim: #1a1a1a;
+    --k9-mid: #2e2e2e;
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Bebas Neue', sans-serif;
+    --body: 'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--body);
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid #222;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(212,160,23,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,160,23,0.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridPulse 8s ease-in-out infinite;
+  }
+
+  @keyframes gridPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .hero-scanline {
+    position: absolute;
+    top: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--k9-gold), transparent);
+    animation: scan 6s linear infinite;
+    opacity: 0.7;
+  }
+
+  @keyframes scan {
+    from { top: -2px; }
+    to { top: 100%; }
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 48px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 1.6rem;
+    letter-spacing: 0.1em;
+    color: var(--k9-gold);
+  }
+
+  .nav-badge {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--k9-steel);
+    border: 1px solid #333;
+    padding: 6px 14px;
+    text-transform: uppercase;
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 48px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    color: var(--k9-amber);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(7rem, 16vw, 15rem);
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+    animation: fadeUp 0.8s 0.1s ease both;
+    position: relative;
+  }
+
+  .hero-title .cyber {
+    display: block;
+    color: var(--white);
+    -webkit-text-stroke: 1px rgba(240,237,232,0.2);
+  }
+
+  .hero-title .k9 {
+    display: block;
+    color: var(--k9-gold);
+    text-shadow:
+      0 0 60px rgba(212,160,23,0.4),
+      0 0 120px rgba(212,160,23,0.2);
+  }
+
+  .hero-title .ai {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--k9-amber);
+    opacity: 0.5;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--k9-steel);
+    max-width: 480px;
+    line-height: 1.6;
+    margin-top: 36px;
+    font-weight: 400;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-price {
+    margin-top: 48px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .price-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--k9-steel);
+    text-transform: uppercase;
+  }
+
+  .price-amount {
+    font-family: var(--display);
+    font-size: 3.5rem;
+    color: var(--k9-gold);
+    letter-spacing: 0.05em;
+  }
+
+  .hero-bottom {
+    padding: 24px 48px;
+    display: flex;
+    gap: 48px;
+    position: relative;
+    z-index: 10;
+    border-top: 1px solid #1a1a1a;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-num {
+    font-family: var(--display);
+    font-size: 2rem;
+    color: var(--white);
+    letter-spacing: 0.05em;
+  }
+
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: #555;
+    text-transform: uppercase;
+  }
+
+  /* DOG SILHOUETTE */
+  .hero-dog {
+    position: absolute;
+    right: -20px;
+    bottom: 0;
+    width: 55vw;
+    max-width: 750px;
+    opacity: 0.06;
+    z-index: 1;
+    animation: dogBreath 6s ease-in-out infinite;
+  }
+
+  @keyframes dogBreath {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.015) translateY(-8px); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 100px 48px;
+    border-bottom: 1px solid #161616;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    color: var(--k9-amber);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, #333, transparent);
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin-bottom: 32px;
+  }
+
+  /* ── WHY THIS NAME ── */
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 48px;
+  }
+
+  .why-card {
+    background: var(--k9-dim);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .why-card:hover {
+    background: #1e1e1e;
+  }
+
+  .why-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--k9-gold);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.4s ease;
+  }
+
+  .why-card:hover::before {
+    transform: scaleY(1);
+  }
+
+  .why-num {
+    font-family: var(--display);
+    font-size: 4rem;
+    color: #2a2a2a;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .why-heading {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .why-body {
+    font-size: 0.9rem;
+    color: var(--k9-steel);
+    line-height: 1.7;
+  }
+
+  .why-body strong {
+    color: var(--k9-gold);
+    font-weight: 600;
+  }
+
+  /* ── MARKET SECTORS ── */
+  .sectors {
+    background: var(--k9-dim);
+  }
+
+  .sectors-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 48px;
+  }
+
+  .sector-item {
+    padding: 40px 32px;
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+
+  .sector-item:hover { transform: translateY(-4px); }
+
+  .sector-icon {
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .sector-name {
+    font-family: var(--display);
+    font-size: 1.8rem;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .sector-desc {
+    font-size: 0.82rem;
+    color: var(--k9-steel);
+    line-height: 1.6;
+  }
+
+  .sector-tag {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    padding: 4px 10px;
+    border: 1px solid var(--k9-gold);
+    color: var(--k9-gold);
+    text-transform: uppercase;
+  }
+
+  /* ── BRAND VALUE ── */
+  .value-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    margin-top: 48px;
+  }
+
+  .value-big-text {
+    font-family: var(--display);
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 32px;
+  }
+
+  .value-big-text em {
+    font-style: normal;
+    color: var(--k9-gold);
+  }
+
+  .value-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .value-list li {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    font-size: 0.88rem;
+    color: var(--k9-steel);
+    line-height: 1.6;
+  }
+
+  .value-list li::before {
+    content: '▸';
+    color: var(--k9-amber);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .value-list li strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .comparables {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .comp-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 24px;
+    padding: 20px 24px;
+    background: var(--k9-dim);
+    font-size: 0.85rem;
+    transition: background 0.2s;
+  }
+
+  .comp-row:hover { background: #222; }
+
+  .comp-domain {
+    font-family: var(--mono);
+    color: var(--k9-steel);
+  }
+
+  .comp-price {
+    font-family: var(--display);
+    font-size: 1.4rem;
+    color: var(--white);
+    letter-spacing: 0.05em;
+  }
+
+  .comp-badge {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    padding: 3px 8px;
+    text-transform: uppercase;
+  }
+
+  .badge-sold { background: #1a3a1a; color: #4caf50; border: 1px solid #2e5a2e; }
+  .badge-target { background: #3a2800; color: var(--k9-gold); border: 1px solid var(--k9-gold); }
+
+  /* ── BRAND IDENTITY ── */
+  .identity-showcase {
+    margin-top: 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+  }
+
+  .identity-card {
+    background: var(--k9-dim);
+    padding: 48px 40px;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .identity-card.featured {
+    background: linear-gradient(135deg, #1a1200 0%, #2a1e00 100%);
+    border: 1px solid rgba(212,160,23,0.3);
+    grid-column: span 2;
+  }
+
+  .identity-logo-large {
+    font-family: var(--display);
+    font-size: 5rem;
+    color: var(--k9-gold);
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(212,160,23,0.4);
+    margin-bottom: 8px;
+  }
+
+  .identity-tagline {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--k9-steel);
+    text-transform: uppercase;
+  }
+
+  .identity-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: #444;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .color-swatch {
+    width: 100%;
+    height: 80px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+
+  .swatch-name {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--white);
+  }
+
+  .swatch-hex {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: #555;
+  }
+
+  /* ── TAGLINES ── */
+  .taglines-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 48px;
+  }
+
+  .tagline-card {
+    padding: 40px;
+    background: var(--k9-dim);
+    position: relative;
+  }
+
+  .tagline-text {
+    font-family: var(--display);
+    font-size: 2rem;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .tagline-context {
+    font-size: 0.8rem;
+    color: #555;
+    font-family: var(--mono);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ACQUISITION CTA ── */
+  .cta-section {
+    background: linear-gradient(135deg, #0d0d00, #1a1200);
+    border-bottom: none;
+    text-align: center;
+    padding: 120px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: 'CYBERK9';
+    font-family: var(--display);
+    font-size: 30vw;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(212,160,23,0.03);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .cta-title {
+    font-family: var(--display);
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    line-height: 1;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .cta-title span { color: var(--k9-gold); }
+
+  .cta-sub {
+    font-size: 1rem;
+    color: var(--k9-steel);
+    max-width: 500px;
+    margin: 0 auto 56px;
+    line-height: 1.7;
+  }
+
+  .cta-price-block {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 40px 80px;
+    border: 1px solid rgba(212,160,23,0.4);
+    background: rgba(212,160,23,0.04);
+    margin-bottom: 48px;
+    position: relative;
+  }
+
+  .cta-price-block::before,
+  .cta-price-block::after {
+    content: '●';
+    position: absolute;
+    font-size: 6px;
+    color: var(--k9-gold);
+  }
+  .cta-price-block::before { top: -4px; left: -4px; }
+  .cta-price-block::after { bottom: -4px; right: -4px; }
+
+  .cta-asking {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--k9-steel);
+    text-transform: uppercase;
+  }
+
+  .cta-price {
+    font-family: var(--display);
+    font-size: 5rem;
+    color: var(--k9-gold);
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 60px rgba(212,160,23,0.5);
+  }
+
+  .cta-note {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    color: #444;
+    text-transform: uppercase;
+    text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* ── URGENCY BAR ── */
+  .urgency-bar {
+    background: var(--k9-gold);
+    padding: 14px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .urgency-text {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--black);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .ticker {
+    display: flex;
+    gap: 48px;
+    white-space: nowrap;
+    animation: ticker 20s linear infinite;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 40px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #111;
+  }
+
+  .footer-logo {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    color: var(--k9-gold);
+  }
+
+  .footer-note {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    color: #444;
+    text-transform: uppercase;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav, section, .hero-content, .hero-bottom { padding-left: 24px; padding-right: 24px; }
+    .why-grid, .sectors-list, .value-cols, .taglines-grid, .identity-showcase { grid-template-columns: 1fr; }
+    .identity-card.featured { grid-column: span 1; }
+    .hero-dog { display: none; }
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- URGENCY TICKER -->
+<div class="urgency-bar">
+  <div class="ticker">
+    <span class="urgency-text">Premium .AI Domain — cyberk9.ai — $2,000,000 USD — One Owner — Category-Defining Asset —</span>
+    <span class="urgency-text">Premium .AI Domain — cyberk9.ai — $2,000,000 USD — One Owner — Category-Defining Asset —</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-scanline"></div>
+
+  <nav>
+    <div class="nav-logo">CYBERK9.AI</div>
+
+  </nav>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Premium .AI Domain</div>
+    <h1 class="hero-title">
+      <span class="cyber">CYBER</span>
+      <span class="k9">K9</span>
+      <span class="ai">.AI</span>
+    </h1>
+    <p class="hero-sub">
+      The most powerful two-word brand in AI-driven cybersecurity, defense tech, and autonomous intelligence. A domain that commands authority before a single product ships.
+    </p>
+    <div class="hero-price">
+      <span class="price-label">Asking Price</span>
+      <span class="price-amount">$2,000,000</span>
+    </div>
+  </div>
+
+  <!-- SVG dog silhouette -->
+  <svg class="hero-dog" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" fill="white">
+    <!-- Simplified dog silhouette shape -->
+    <path d="M620,480 C620,480 680,420 700,360 C720,300 710,250 680,220 C660,200 630,195 610,200 C620,170 630,140 615,115 C600,90 575,85 560,95 C545,105 540,130 545,155 C520,145 490,148 470,165 C450,182 445,210 455,235 C420,225 385,230 360,250 C335,270 325,300 335,330 C310,320 280,325 265,345 C250,365 255,395 270,415 C245,410 215,420 205,445 C195,470 210,500 240,510 C210,515 185,530 185,555 C185,560 190,565 200,565 L700,565 C710,565 715,560 715,555 L715,510 C715,495 700,485 685,485 L650,485 Z"/>
+  </svg>
+
+  <div class="hero-bottom">
+    <div class="stat">
+      <span class="stat-num">2</span>
+      <span class="stat-label">Power Words</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">.AI</span>
+      <span class="stat-label">Premium TLD</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">∞</span>
+      <span class="stat-label">Brand Verticals</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">7</span>
+      <span class="stat-label">Characters</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- WHY THIS NAME -->
+<section>
+  <div class="section-label">01 — The Name Itself</div>
+  <h2 class="section-title reveal">WHY CYBERK9<br>IS WORTH MILLIONS</h2>
+
+  <div class="why-grid reveal">
+    <div class="why-card">
+      <div class="why-num">01</div>
+      <div class="why-heading">The Cyber Half</div>
+      <p class="why-body">
+        <strong>Cyber</strong> is not a buzzword — it is a $300B industry prefix. Every Fortune 500 has a CISO. Every government has a cyber command. Cyber signals <em>defense, intelligence, security, and authority</em>. It is instantly understood across every language and market.
+      </p>
+    </div>
+    <div class="why-card">
+      <div class="why-num">02</div>
+      <div class="why-heading">The K9 Half</div>
+      <p class="why-body">
+        <strong>K9</strong> carries elite force connotations — military working dogs, bomb detection units, elite police units. It signals precision, loyalty, lethality, and advanced training. It is viscerally memorable because <em>it is not metaphorical — it is mythological.</em>
+      </p>
+    </div>
+    <div class="why-card">
+      <div class="why-num">03</div>
+      <div class="why-heading">The .AI Suffix</div>
+      <p class="why-body">
+        <strong>.AI domains</strong> are the hardest premium TLD to acquire. The extension signals the future — it isn't just a country code anymore, it is a category declaration. Combined with a brandable two-word name, this is an <strong>impossible-to-replicate asset</strong>.
+      </p>
+    </div>
+    <div class="why-card">
+      <div class="why-num">04</div>
+      <div class="why-heading">Phonetic & Visual Power</div>
+      <p class="why-body">
+        Seven characters. Zero ambiguity. Pronounces in one breath: <strong>Sy-ber-Kay-Nine</strong>. No spelling confusion. No trademark landmines from generic words. It looks ferocious on a billboard, a helmet, a product badge, a jet, a UI screen. <em>It is a logo before it is a logo.</em>
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- MARKET SECTORS -->
+<section class="sectors">
+  <div class="section-label">02 — Target Markets</div>
+  <h2 class="section-title reveal">SIX SECTORS.<br>ONE DOMAIN.</h2>
+  <p style="color: var(--k9-steel); max-width: 560px; line-height: 1.7; font-size: 0.9rem;" class="reveal">
+    The highest-value domain names unlock multiple markets simultaneously. CyberK9 is not niche — it is a master brand capable of defining an entire category.
+  </p>
+
+  <div class="sectors-list reveal">
+    <div class="sector-item">
+      <span class="sector-icon">🛡️</span>
+      <div class="sector-name">CYBERSECURITY</div>
+      <p class="sector-desc">AI-powered threat detection, EDR, SOC automation, red team platforms. The $300B market has no dominant K9 brand yet.</p>
+      <span class="sector-tag">Primary</span>
+    </div>
+    <div class="sector-item">
+      <span class="sector-icon">🤖</span>
+      <div class="sector-name">AUTONOMOUS AGENTS</div>
+      <p class="sector-desc">AI agent platforms that hunt, fetch, guard, and retrieve data. CyberK9 is the natural name for a next-gen agentic AI system.</p>
+      <span class="sector-tag">Emerging</span>
+    </div>
+    <div class="sector-item">
+      <span class="sector-icon">🎖️</span>
+      <div class="sector-name">DEFENSE TECH</div>
+      <p class="sector-desc">Drone systems, autonomous UAVs, battlefield AI, military intelligence platforms. K9 resonates deeply in defense culture.</p>
+      <span class="sector-tag">Premium</span>
+    </div>
+    <div class="sector-item">
+      <span class="sector-icon">🦺</span>
+      <div class="sector-name">LAW ENFORCEMENT</div>
+      <p class="sector-desc">AI tools for police forces, border protection, forensics, and surveillance. K9 units are already an established brand in this space.</p>
+      <span class="sector-tag">Institutional</span>
+    </div>
+    <div class="sector-item">
+      <span class="sector-icon">🐕</span>
+      <div class="sector-name">SMART PET TECH</div>
+      <p class="sector-desc">Premium AI-powered pet technology — health monitoring, behavior AI, smart collars. A $20B+ market with no dominant brand.</p>
+      <span class="sector-tag">Consumer</span>
+    </div>
+    <div class="sector-item">
+      <span class="sector-icon">🎮</span>
+      <div class="sector-name">GAMING / ESPORTS</div>
+      <p class="sector-desc">An elite gaming brand, esports team identity, or tactical game publisher. CyberK9 as a team name is already iconic on arrival.</p>
+      <span class="sector-tag">Cultural</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- BRAND VALUE & COMPARABLES -->
+<section>
+  <div class="section-label">03 — Domain Valuation</div>
+  <h2 class="section-title reveal">THE $2M<br>CASE</h2>
+
+  <div class="value-cols reveal">
+    <div>
+      <p class="value-big-text">
+        Premium domains don't cost money. They <em>save</em> money — and make more of it.
+      </p>
+      <ul class="value-list">
+        <li><strong>Zero brand buildout risk.</strong> The name IS the brand. No market testing, no trademark conflicts, no rebrand expenses.</li>
+        <li><strong>Competitor moat.</strong> Owning CyberK9.ai means no one else can. The defensive value alone justifies a fraction of the price.</li>
+        <li><strong>VC signal.</strong> A $2M domain in a pitch deck signals seriousness and category ambition. It is often recoverable in the first funding round.</li>
+        <li><strong>PR & media velocity.</strong> Journalists write about names that are memorable. CyberK9 writes itself into headlines.</li>
+        <li><strong>Resale floor.</strong> Premium two-word .AI domains appreciate. The $2M price is today's price — not tomorrow's.</li>
+        <li><strong>Word-of-mouth coefficient.</strong> A name that people remember and repeat without being told twice is worth a hundred million in earned media.</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="section-label" style="margin-bottom: 16px; font-size: 0.58rem;">Comparable Domain Sales</div>
+      <div class="comparables">
+        <div class="comp-row">
+          <span class="comp-domain">voice.ai</span>
+          <span class="comp-price">$6.7M</span>
+          <span class="comp-badge badge-sold">Sold</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-domain">prompt.ai</span>
+          <span class="comp-price">$4.1M</span>
+          <span class="comp-badge badge-sold">Sold</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-domain">chat.ai</span>
+          <span class="comp-price">$3.8M</span>
+          <span class="comp-badge badge-sold">Sold</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-domain">data.ai</span>
+          <span class="comp-price">$2.9M</span>
+          <span class="comp-badge badge-sold">Sold</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-domain">agent.ai</span>
+          <span class="comp-price">$2.4M</span>
+          <span class="comp-badge badge-sold">Sold</span>
+        </div>
+        <div class="comp-row" style="border: 1px solid rgba(212,160,23,0.3);">
+          <span class="comp-domain" style="color: var(--k9-gold);">cyberk9.ai</span>
+          <span class="comp-price" style="color: var(--k9-gold);">$2.0M</span>
+          <span class="comp-badge badge-target">Available</span>
+        </div>
+      </div>
+      <p style="font-family: var(--mono); font-size: 0.58rem; color: #444; letter-spacing: 0.1em; margin-top: 16px; text-transform: uppercase;">
+        * Comparable sales for illustration. Market pricing sourced from public domain sale records.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- BRAND IDENTITY -->
+<section style="background: var(--k9-dim);">
+  <div class="section-label">04 — Brand Identity</div>
+  <h2 class="section-title reveal">WHAT THE BRAND<br>LOOKS LIKE</h2>
+
+  <div class="identity-showcase reveal">
+    <div class="identity-card featured">
+      <div style="color: #444; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 24px;">Primary Wordmark</div>
+      <div class="identity-logo-large">CYBERK9.AI</div>
+      <div class="identity-tagline">Intelligent Defense. Unleashed.</div>
+    </div>
+
+    <div class="identity-card">
+      <div class="identity-label">Lockup Alt</div>
+      <div style="font-family: var(--display); font-size: 2.8rem; color: var(--white); letter-spacing: 0.06em; margin-bottom: 8px;">CYBER<br><span style="color: var(--k9-gold);">K9</span></div>
+      <div style="font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.3em; color: #555;">.AI PLATFORM</div>
+    </div>
+    <div class="identity-card">
+      <div class="identity-label">Abbreviated Mark</div>
+      <div style="font-family: var(--display); font-size: 5rem; color: var(--k9-gold); letter-spacing: 0.08em; text-shadow: 0 0 30px rgba(212,160,23,0.5);">CK9</div>
+      <div style="font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.25em; color: #444; margin-top: 8px; text-transform: uppercase;">Icon / Badge</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- TAGLINES -->
+<section>
+  <div class="section-label">05 — Brand Voice</div>
+  <h2 class="section-title reveal">READY-TO-USE<br>BRAND LANGUAGE</h2>
+
+  <div class="taglines-grid reveal">
+    <div class="tagline-card">
+      <div class="tagline-text">Intelligent Defense.<br>Unleashed.</div>
+      <div class="tagline-context">// Cybersecurity / Defense Platform</div>
+    </div>
+    <div class="tagline-card">
+      <div class="tagline-text">Your AI Hunts<br>Threats. You Sleep.</div>
+      <div class="tagline-context">// B2B Security Product</div>
+    </div>
+    <div class="tagline-card">
+      <div class="tagline-text">Trained. Loyal.<br>Relentless.</div>
+      <div class="tagline-context">// Autonomous AI Agents</div>
+    </div>
+    <div class="tagline-card">
+      <div class="tagline-text">The New Guard<br>Never Sleeps.</div>
+      <div class="tagline-context">// Enterprise / Government</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-label" style="justify-content: center; margin-bottom: 40px;">06 — Inquire</div>
+  <h2 class="cta-title">
+    OWN THE NAME.<br><span>OWN THE SPACE.</span>
+  </h2>
+  <p class="cta-sub">
+    Category-defining domains are acquired once and held forever. CyberK9.ai positions its owner as the undisputed leader of AI-powered defense before the category fully forms.
+  </p>
+
+  <div class="cta-price-block">
+    <span class="cta-asking">Asking Price</span>
+    <span class="cta-price">$2,000,000</span>
+    <span class="cta-asking">USD · <a href="mailto:cyberk9ai@gmail.com" style="color: var(--k9-gold); text-decoration: underline; letter-spacing: 0.25em;">Inquire for Details</a></span>
+  </div>
+
+  <p class="cta-note">
+    Serious inquiries only. Secure transfer via escrow. Structured payment available for qualified parties.
+  </p>
+</section>
+
+<footer>
+  <div class="footer-logo">CYBERK9.AI</div>
+  <div class="footer-note">All rights reserved.</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  reveals.forEach(r => io.observe(r));
+</script>
+</body>
+</html>
